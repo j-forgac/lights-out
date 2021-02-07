@@ -1,0 +1,11 @@
+<p>game-board works!</p>
+<div>
+  <div class="board">
+    <div *ngFor="let row of gridMap | keyvalue" class="row">
+      <div *ngFor="let tile of row.value | keyvalue">
+        <div *ngIf="tile.value != 9" [ngClass]="'tile' + tile.value" (click)="evaluateClick(row.key,tile.key)"></div>
+      </div>
+    </div>
+    <button (click)="generateMap()">Generate</button>
+  </div>
+</div>
