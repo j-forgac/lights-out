@@ -3,9 +3,13 @@
   <div class="board">
     <div *ngFor="let row of gridMap | keyvalue" class="row">
       <div *ngFor="let tile of row.value | keyvalue">
-        <div *ngIf="tile.value != 9" [ngClass]="'tile' + tile.value" (click)="evaluateClick(row.key,tile.key)"></div>
+        <div *ngIf="tile.value != 9" [ngClass]="'tile' + tile.value" (click)="evaluateClick(row.key,tile.key); victoryCheck()"></div>
       </div>
     </div>
-    <button (click)="generateMap()">Generate</button>
+    <div>{{turns}}</div>
+    <form (ngSubmit) ="generateMap()">
+    <button>Generate</button>
+      <input [(ngModel)] ="dimensions" type="text" name="title" >
+    </form>
   </div>
 </div>

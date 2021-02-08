@@ -1,4 +1,7 @@
+// @ts-nocheck
+
 import {Component, OnInit} from '@angular/core';
+import {convertDirectiveMetadataToExpression} from '@angular/core/schematics/migrations/undecorated-classes-with-di/decorator_rewrite/convert_directive_metadata';
 
 @Component({
   selector: 'app-game-board',
@@ -8,6 +11,9 @@ import {Component, OnInit} from '@angular/core';
 export class GameBoardComponent implements OnInit {
 
   gridMap: Map<number, Map<number, number>> = new Map();
+  turns = 0;
+  dimensions = 5;
+  bestScore;
 
   constructor() {
   }
@@ -16,44 +22,40 @@ export class GameBoardComponent implements OnInit {
   }
 
   generateMap(): void {
-    this.gridMap.clear();
     let tile;
-    for (let x = 0; x < 7; x++){
+    this.dimensions = this.dimensions < 1 ? 5 : Number(this.dimensions);
+    this.gridMap.clear();
+    for (let x = 0; x < Number(this.dimensions) + 2; x++) {
       let gridRow = new Map();
-      for (let y = 0; y < 7; y++){
-        if (x === 0 || x === 6 || y === 0 || y === 6){
+      for (let y = 0; y < this.dimensions + 2; y++) {
+        if (x === 0 || x === this.dimensions + 1 || y === 0 || y === this.dimensions + 1) {
           tile = 9;
         } else {
           tile = Math.random();
-          if (tile > 0.5){
+          if (tile > 0.5) {
             tile = 1;
-          }else {
+          } else {
             tile = 0;
           }
         }
-        console.log(tile);
         gridRow.set(y, tile);
       }
       this.gridMap.set(x, gridRow);
     }
-    console.log(this.gridMap);
   }
 
   evaluateClick(posX: number, posY: number): void {
+    this.turns++;
     this.changeState(posX, posY);
-    // @ts-ignore
     if (this.gridMap.get(posX + 1).get(posY) !== 9) {
       this.changeState(posX + 1, posY);
     }
-    // @ts-ignore
     if (this.gridMap.get(posX - 1).get(posY) !== 9) {
       this.changeState(posX - 1, posY);
     }
-    // @ts-ignore
     if (this.gridMap.get(posX).get(posY + 1) !== 9) {
       this.changeState(posX, posY + 1);
     }
-    // @ts-ignore
     if (this.gridMap.get(posX).get(posY - 1) !== 9) {
       this.changeState(posX, posY - 1);
     }
@@ -61,27 +63,26 @@ export class GameBoardComponent implements OnInit {
   }
 
   changeState(x: number, y: number): void {
-    // @ts-ignore
     const result = (Math.abs(this.gridMap.get(x).get(y) - 1));
-    // @ts-ignore
-    console.log(Math.abs(this.gridMap.get(x).get(y) - 1));
-    // @ts-ignore
     this.gridMap.get(x).set(y, result);
   }
 
-  victoryCheck(): void{
+  victoryCheck(): void {
     let counter0 = 0;
-    let counter1 = 0;
-    for (let x = 1; x < 7; x++){
-      for (let y = 1; y < 7; y++){
-        // @ts-ignore
-        if (this.gridMap.get(x).get(y) === 0){
+    for (let x = 1; x < 7; x++) {
+      for (let y = 1; y < 7; y++) {
+        if (this.gridMap.get(x).get(y) === 0) {
+          console.log(x + ' : ' + y);
           counter0++;
-        } else {
-          counter1++;
-        }
-        if (counter1 === 125 || counter0 === 125){
-          console.log("Damn, congratulation! You wasted your lifetime playing this shit");
+          console.log('COUNTER JE:' + counter0);
+          console.log('ROZMERY JSO :' + Math.pow(this.dimensions, 2));
+          if (counter0 === Math.pow(this.dimensions, 2)) { // proč se ti nelíbili moje uherský konstanty?
+            if (this.bestScore > this.turns || this.bestScore === undefined) {
+              this.bestScore = this.turns;
+            }
+            this.turns = 0;
+            console.log('Damn, congratulation! You wasted your lifetime playing this shit ');
+          }
         }
       }
     }
