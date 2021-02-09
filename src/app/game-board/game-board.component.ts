@@ -74,8 +74,6 @@ export class GameBoardComponent implements OnInit {
         if (this.gridMap.get(x).get(y) === 0) {
           console.log(x + ' : ' + y);
           counter0++;
-          console.log('COUNTER JE:' + counter0);
-          console.log('ROZMERY JSO :' + Math.pow(this.dimensions, 2));
           if (counter0 === Math.pow(this.dimensions, 2)) { // proč se ti nelíbili moje uherský konstanty?
             if (this.bestScore > this.turns || this.bestScore === undefined) {
               this.bestScore = this.turns;
