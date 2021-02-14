@@ -69,8 +69,8 @@ export class GameBoardComponent implements OnInit {
 
   victoryCheck(): void {
     let counter0 = 0;
-    for (let x = 1; x < 7; x++) {
-      for (let y = 1; y < 7; y++) {
+    for (let x = 1; x <= this.dimensions; x++) {
+      for (let y = 1; y <= this.dimensions; y++) {
         if (this.gridMap.get(x).get(y) === 0) {
           console.log(x + ' : ' + y);
           counter0++;
